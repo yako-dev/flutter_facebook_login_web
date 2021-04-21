@@ -9,9 +9,9 @@ class FacebookLoginWeb {
       const MethodChannel('flutter_facebook_login_web');
 
   Future<FacebookLoginResult> logIn(List<String> permissions) async {
-    Map map = await _channel.invokeMethod('login', {
+    Map map = await (_channel.invokeMethod('login', {
       'permissions': permissions,
-    });
+    }) as FutureOr<Map<dynamic, dynamic>>);
 
     return FacebookLoginResult._(map.cast<String, dynamic>());
   }
@@ -33,8 +33,8 @@ class FacebookLoginWeb {
     return (await currentAccessToken)?.isValid() ?? false;
   }
 
-  Future<FacebookAccessToken> get currentAccessToken async {
-    Map accessToken = await _channel.invokeMethod('getCurrentAccessToken');
+  Future<FacebookAccessToken?> get currentAccessToken async {
+    Map? accessToken = await _channel.invokeMethod('getCurrentAccessToken');
 
     if (accessToken == null) {
       return null;
@@ -64,7 +64,7 @@ class FacebookLoginResult {
   ///
   /// Only available when the [status] equals [FacebookLoginStatus.loggedIn],
   /// otherwise null.
-  final FacebookAccessToken accessToken;
+  final FacebookAccessToken? accessToken;
 
   /// The error message when the log in flow completed with an error.
   ///
@@ -81,7 +81,7 @@ class FacebookLoginResult {
             : null,
         errorMessage = map['errorMessage'] ?? '';
 
-  static FacebookLoginStatus _parseStatus(String status) {
+  static FacebookLoginStatus _parseStatus(String? status) {
     switch (status) {
       case 'connected':
         return FacebookLoginStatus.loggedIn;
@@ -116,10 +116,10 @@ enum FacebookLoginStatus {
 class FacebookAccessToken {
   /// The access token returned by the Facebook login, which can be used to
   /// access Facebook APIs.
-  final String token;
+  final String? token;
 
   /// The id for the user that is associated with this access token.
-  final String userId;
+  final String? userId;
 
   /// The date when this access token expires.
   final DateTime expires;
