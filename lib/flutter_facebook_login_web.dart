@@ -9,9 +9,9 @@ class FacebookLoginWeb {
       const MethodChannel('flutter_facebook_login_web');
 
   Future<FacebookLoginResult> logIn(List<String> permissions) async {
-    Map map = await (_channel.invokeMethod('login', {
+    Map map = await _channel.invokeMethod('login', {
       'permissions': permissions,
-    }) as FutureOr<Map<dynamic, dynamic>>);
+    });
 
     return FacebookLoginResult._(map.cast<String, dynamic>());
   }
